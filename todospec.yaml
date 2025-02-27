@@ -27,6 +27,8 @@ externalDocs:
 paths:
   /todolist:
     get:
+      tags:
+        - Todolist
       summary: Get all todolist
       description: GEt all active todolist by default
       parameters:
@@ -60,21 +62,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    name:
-                      type: string
-                    priority:
-                      type: string
-                      format: int32
-                    tags:
-                      type: array
-                      items:
-                        type: string
+                $ref: "#/components/schemas/ArrayTodolist"
               examples:
                 success:
                   description: Example success get all todolist
@@ -88,6 +76,8 @@ paths:
                       priority: 5
                       tags: [ PHP, Programming ]
     post:
+      tags:
+        - Todolist
       summary: Create new todolist
       description: Create new todolist to database
       requestBody:
@@ -95,24 +85,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  required: true
-                  minLength: 1
-                priority:
-                  type: integer
-                  format: int32
-                  required: true
-                  default: 1
-                tags:
-                  type: array
-                  required: false
-                  minLength: 1
-                  items:
-                    type: string
-                    minLength: 1
+              $ref: "#/components/schemas/CreateOrUpdateTodolist"
             examples:
               java:
                 description: Example create todolist Java
@@ -138,19 +111,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  name:
-                    type: string
-                  priority:
-                    type: string
-                    format: int32
-                  tags:
-                    type: array
-                    items:
-                      type: string
+                $ref: "#/components/schemas/Todolist"
               examples:
                 java:
                   description: Success create todolist Java
@@ -172,47 +133,18 @@ paths:
                     ]
   /todolist/{todolistId}:
     put:
+      tags:
+        - Todolist
       summary: Update existing todolist
       description: Update existing todolist in database
       parameters:
-        - name: todolistId
-          in: path
-          required: true
-          description: Todolist id to update
-          schema:
-            type: string
-            minLength: 1
-            maxLength: 100
-          examples:
-            java:
-              description: Sample todolist id for Java
-              value: 1
-            php:
-              description: Sample todolist id for PHP
-              value: 2
+        - $ref: "#/components/parameters/TodolistId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  required: true
-                priority:
-                  type: integer
-                  format: int32
-                  default: 1
-                  required: true
-                tags:
-                  type: array
-                  required: false
-                  minLength: 1
-                  items:
-                    type: string
-                    minLength: 1
+              $ref: "#/components/schemas/CreateOrUpdateTodolist"
             examples:
               java:
                 description: Example create todolist Java
@@ -238,19 +170,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  name:
-                    type: string
-                  priority:
-                    type: string
-                    format: int32
-                  tags:
-                    type: array
-                    items:
-                      type: string
+                $ref: "#/components/schemas/Todolist"
               examples:
                 java:
                   description: Success create todolist Java
@@ -272,17 +192,12 @@ paths:
                     ]
 
     delete:
+      tags:
+        - Todolist
       summary: Delete existing todolist
       description: Delete existing todolist in database
       parameters:
-        - name: todolistId
-          in: path
-          required: true
-          description: Todolist id to delete
-          schema:
-            type: string
-            minLength: 1
-            maxLength: 100
+        - $ref: "#/components/parameters/TodolistId"
       responses:
         200:
           description: Success delete todolist
@@ -312,3 +227,52 @@ paths:
                   description: Failed delete todolist
                   value:
                     success: false
+components:
+  parameters:
+    TodolistId:
+      name: todolistId
+      in: path
+      required: true
+      description: Todolist id to delete
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 100
+      examples:
+        java:
+          description: Sample todolist id for Java
+          value: 1
+        php:
+          description: Sample todolist id for PHP
+          value: 2
+  schemas:
+    Todolist:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        priority:
+          type: string
+          format: int32
+        tags:
+          type: array
+          items:
+            type: string
+    CreateOrUpdateTodolist:
+      type: object
+      properties:
+        name:
+          type: string
+        priority:
+          type: string
+          format: int32
+        tags:
+          type: array
+          items:
+            type: string
+    ArrayTodolist:
+      type: array
+      items:
+        $ref: "#/components/schemas/Todolist"
