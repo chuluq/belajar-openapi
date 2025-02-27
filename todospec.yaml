@@ -27,6 +27,8 @@ externalDocs:
 paths:
   /todolist:
     get:
+      security:
+        - TodolistAuth: []
       tags:
         - Todolist
       summary: Get all todolist
@@ -46,8 +48,8 @@ paths:
           description: Filter todolist by name
           schema:
             type: string
-            nullable: true,
-            minLength: 1,
+            nullable: true
+            minLength: 1
             maxLength: 100
           examples:
             java:
@@ -76,6 +78,8 @@ paths:
                       priority: 5
                       tags: [ PHP, Programming ]
     post:
+      security:
+        - TodolistAuth: [ ]
       tags:
         - Todolist
       summary: Create new todolist
@@ -133,6 +137,8 @@ paths:
                     ]
   /todolist/{todolistId}:
     put:
+      security:
+        - TodolistAuth: [ ]
       tags:
         - Todolist
       summary: Update existing todolist
@@ -192,6 +198,8 @@ paths:
                     ]
 
     delete:
+      security:
+        - TodolistAuth: [ ]
       tags:
         - Todolist
       summary: Delete existing todolist
@@ -228,6 +236,12 @@ paths:
                   value:
                     success: false
 components:
+  securitySchemes:
+    TodolistAuth:
+      description: Authorization for Todolist RESTful API
+      type: apiKey
+      in: header
+      name: X-API-Key
   parameters:
     TodolistId:
       name: todolistId
